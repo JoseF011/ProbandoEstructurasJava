@@ -1,96 +1,91 @@
 package estructurasbasicas;
+
 import java.util.Scanner;
+
 public class EstructurasBasicas {
 
     public static void main(String[] args) {
         Scanner entrada = new Scanner(System.in);
+        int dineroSolicitado = 0;
+        final int BILLETES[] = {500, 200, 100, 50, 20, 10, 5, 2, 1};
+        int billetesEntregados[] = new int[BILLETES.length];//array con el tamaño de la cantidad de billetes
+        int billetesRecargados[] = new int[BILLETES.length];//para el recargo de billetes
+        int contRecarga = 0, contRetiro = 0;
+        int dineroEntregado = 0, dineroRestante = 0;
+        int limiteRetirar = 20000; 
+        int op = 0;
+        int dineroRecargado;  
 
-        // variable que contendra el valor a devolver
-        int importe = 0;
         do {
-            try {
-                System.out.print("Ingresa la cantidad de dinero que necesita:");
-                importe = entrada.nextInt();
-            } catch (Exception e) {
-                System.out.println("Introduciste un dato erroneo.");
-               System.out.println("");
-                entrada.nextLine();
+            System.out.println("Menú de Opciones");
+            System.out.println("1. Recargo");
+            System.out.println("2. Retiro");
+            System.out.println("3. Historial de transacciones");
+            System.out.println("4. Salir");
+
+            System.out.println("Qué desea hacer?");
+            op = entrada.nextInt();
+
+            switch (op) {
+                case 1:
+                    System.out.println("Ingrese la cantidad de dinero que va a recargar: ");
+                    dineroRecargado = entrada.nextInt();
+
+                    dineroRestante = dineroRecargado;
+
+                    for (int x = 0; x < BILLETES.length; x++) {
+                        if (dineroRestante >= BILLETES[x]) {
+                            billetesRecargados[x] = dineroRestante / BILLETES[x];  //Conocer cuantos billetes entrego de esta denominacion
+                            dineroEntregado = billetesRecargados[x] * BILLETES[x];  //Dinero entregando con estos billetes
+                            dineroRestante -= dineroEntregado;                    //Restar esa cifra para saber cuanto me falta pagar
+                            contRecarga++;
+                        } else {
+                            billetesRecargados[x] = 0;
+                        }
+                       
+
+                        System.out.println("Billetes de " + BILLETES[x] + " entregados: " + billetesRecargados[x] + " DINERO Recargado: " + dineroRecargado + " DINERO Restante: " + dineroRestante);
+                        dineroEntregado = 0;
+                    }
+                    break;
+
+                case 2:
+                    System.out.println("La cantidad limite de retiro diario no debe exceder a 20,000");
+                    System.out.println("Ingrese la cantidad que desea retirar: ");
+                    dineroSolicitado = entrada.nextInt();
+                    if (dineroSolicitado < limiteRetirar) {
+
+                        dineroRestante = dineroSolicitado;
+                        contRetiro++;
+
+                        for (int x = 0; x < BILLETES.length; x++) {
+                            if (dineroRestante >= BILLETES[x]) {
+                                billetesEntregados[x] = dineroRestante / BILLETES[x];  //¨para saber los billetes que se entregan
+                                dineroEntregado = billetesEntregados[x] * BILLETES[x];  //Dinero que se entregó con los billetes
+                                dineroRestante -= dineroEntregado;                    //restar para saber cuanto me falta regresar
+                            } else {
+                                billetesEntregados[x] = 0;
+                            }
+                            System.out.println("Billetes de " + BILLETES[x] + " entregados: " + billetesEntregados[x] + " Dinero Entregado: " + dineroEntregado + " DINERO Restante: " + dineroRestante);
+                            dineroEntregado = 0;
+                        }
+                    } else {
+                        System.out.println("Monto diario de retiro excedido. Ingresar una cantidad menor a 20,000");
+
+                    }
+                    break;
+
+                case 3:
+
+                    System.out.println("Se ha recargado: " + contRecarga + " veces");
+                    System.out.println("Se ha retirado: " + contRetiro + " veces");
+
+                case 4:
+                    System.out.println("Gracias por utilizar el ATM!! Hasta pronto ");
             }
-        } while (importe <= 0);
 
-        calcular(importe);
-    }
-
-    public static void calcular(double importe) {
-        // Indicamos todas las monedas posibles
-        int[] monedas = {500, 200, 100, 50, 20, 10, 5, 2, 1};
-
-        // Creamos un array con 0 de longitud igual a la cantidad de monedas
-        // Este array contendra las monedas a devolver
-        int[] devolver = {0, 0, 0, 0, 0, 0, 0, 0, 0};
-
-        // Recorremos todas las monedas
-        for (int i = 0; i < monedas.length; i++) {
-            // Si el importe actual, es superior a la moneda
-            if (importe >= monedas[i]) {
-                // obtenemos cantidad de monedas
-                devolver[i] = (int) Math.floor(importe / monedas[i]);
-
-                // actualizamos el valor del importe que nos queda por didivir
-                importe = importe - (devolver[i] * monedas[i]);
-            }
-        }
-
-        // Bucle para mostrar el resultado
-        for (int i = 0; i < monedas.length; i++) {
-            if (devolver[i] > 0) {
-                if (monedas[i] > 2) {
-                    // Indicamos que es un billete
-                    System.out.println("Hay " + devolver[i] + " billetes de: " + monedas[i] + " Lempiras");
-                } 
-            }
-
-        }
+        } while (op != 4);//eso se cumplirá mientras sea distinto a 4 ya que si me da otra opción esto será erróneo
 
     }
 
 }
-/*  int numero=0;
-       double decimales=10.5;
-       char caracter='A';
-       boolean binario=false;
-       
-       float nota=85;
-       float MAXPR=60;
-      
-       //Estructuras Decision
-       if(nota>=MAXPR){
-           System.out.println("Aprobó la clase con éxito!");
-       }
-       else{
-           System.out.println("Ha reprobado la clase");
-       }
-       //Operador Ternario
-        System.out.println(nota>MAXPR ? "Aprobó la clase con éxito" : "Reprobó la clase");
-       
-        System.out.println(!binario);
-        
-       if (nota>=0 && nota<60){
-           System.out.println("Reprobado");
-       }else if(nota>=60 && nota<80){
-           System.out.println("Bueno");
-       }else if(nota>=80 && nota<90){
-           System.out.println("Muy bueno");
-       }else{
-           System.out.println("Excelente");
-       }
-        switch (numero){
-            case 0:
-                
-            case 1:
-        }
-       //Estructuras Repetitivas
-       //Operadores logicos
-       //And &
-       //Or |
- */
